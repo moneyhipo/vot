@@ -6,6 +6,13 @@ import { revalidatePath } from "next/cache";
 export async function createPoll(formData: FormData, options: string[]) {
   const question = formData.get("question") as string;
   const closesAtStr = formData.get("closes_at") as string;
+  const admin_password = formData.get("admin_password") as string;
+  
+  const expectedPassword = process.env.ADMIN_PASSWORD || "1234";
+
+  if (admin_password !== expectedPassword) {
+    return { error: "운영자 비밀번호가 틀렸습니다." };
+  }
   
   const closes_at = closesAtStr ? new Date(closesAtStr) : null;
 
@@ -25,9 +32,9 @@ export async function createPoll(formData: FormData, options: string[]) {
     }
 
     revalidatePath("/");
-    return poll.id;
+    return { id: poll.id };
   } catch (e) {
     console.error(e);
-    return null;
+    return { error: "서버 오류로 인해 투표를 생성하지 못했습니다." };
   }
 }

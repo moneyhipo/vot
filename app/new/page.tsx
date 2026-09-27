@@ -39,12 +39,12 @@ export default function NewPollPage() {
     }
 
     // Server action 호출
-    const id = await createPoll(formData, validOptions);
-    if (id) {
-      router.push(`/polls/${id}`);
-    } else {
-      alert("투표 생성에 실패했습니다.");
+    const res = await createPoll(formData, validOptions);
+    if (res?.error) {
+      alert(res.error);
       setLoading(false);
+    } else if (res?.id) {
+      router.push(`/polls/${res.id}`);
     }
   };
 
@@ -53,6 +53,17 @@ export default function NewPollPage() {
       <h2 className="text-2xl font-bold mb-6">새 투표 만들기</h2>
       
       <form onSubmit={handleSubmit} className="space-y-6">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">운영자 비밀번호</label>
+          <input 
+            type="password" 
+            name="admin_password" 
+            required 
+            placeholder="비밀번호를 입력하세요"
+            className="w-full border border-gray-300 rounded-md p-2 focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">질문</label>
           <input 
