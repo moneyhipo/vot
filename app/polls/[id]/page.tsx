@@ -13,8 +13,8 @@ export default async function PollPage({ params }: { params: Promise<{ id: strin
   let options: any[];
 
   try {
-    polls = await sql`SELECT * FROM polls WHERE id = ${id}`;
-    options = await sql`SELECT * FROM options WHERE poll_id = ${id} ORDER BY id ASC`;
+    polls = (await sql`SELECT * FROM polls WHERE id = ${id}`) as any[];
+    options = (await sql`SELECT * FROM options WHERE poll_id = ${id} ORDER BY id ASC`) as any[];
   } catch (e) {
     return notFound();
   }

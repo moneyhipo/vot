@@ -10,11 +10,12 @@ export async function createPoll(formData: FormData, options: string[]) {
   const closes_at = closesAtStr ? new Date(closesAtStr) : null;
 
   try {
-    const [poll] = await sql`
+    const result = await sql`
       INSERT INTO polls (question, closes_at) 
       VALUES (${question}, ${closes_at ? closes_at.toISOString() : null}) 
       RETURNING id
     `;
+    const poll = (result as any[])[0];
 
     for (const option of options) {
       await sql`

@@ -7,7 +7,7 @@ export const revalidate = 0; // 항상 최신 데이터 가져오기 (SSR)
 export default async function Home() {
   let polls: any[] = [];
   try {
-    polls = await sql`SELECT * FROM polls ORDER BY created_at DESC`;
+    polls = (await sql`SELECT * FROM polls ORDER BY created_at DESC`) as any[];
   } catch (e) {
     console.error(e);
   }

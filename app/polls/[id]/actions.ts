@@ -10,7 +10,8 @@ export async function submitVote(formData: FormData) {
   if (!poll_id || !option_id) return;
 
   // 서버사이드에서도 마감 여부 검증
-  const [poll] = await sql`SELECT closes_at FROM polls WHERE id = ${poll_id}`;
+  const pollResult = await sql`SELECT closes_at FROM polls WHERE id = ${poll_id}`;
+  const poll = (pollResult as any[])[0];
   if (poll && poll.closes_at && new Date() > new Date(poll.closes_at)) {
     throw new Error("이미 마감된 투표입니다.");
   }
